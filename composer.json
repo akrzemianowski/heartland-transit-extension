@@ -14,19 +14,6 @@
         "openmage-module"
     ],
     "require": {
-        "globalpayments/php-sdk": "^2.0"
-    },
-    "extra": {
-        "map": [
-            ["app/code/community/Hps/Transit", "magento-root/app/code/community/Hps/Transit"],
-            ["app/etc/modules/Hps_Transit.xml", "magento-root/app/etc/modules/Hps_Transit.xml"],
-            ["app/design/frontend/base/default/template/transit", "magento-root/app/design/frontend/base/default/template/transit"],
-            ["app/design/frontend/base/default/layout/transit.xml", "magento-root/app/design/frontend/base/default/layout/transit.xml"],
-            ["app/design/adminhtml/default/default/layout/transit.xml", "magento-root/app/design/adminhtml/default/default/layout/transit.xml"],
-            ["app/design/adminhtml/default/default/template/transit", "magento-root/app/design/adminhtml/default/default/template/transit"],
-            ["js/transit", "magento-root/js/transit"],
-            ["skin/frontend/base/default/transit/", "magento-root/skin/frontend/base/default/transit/"]
-        ]
+        "globalpayments/php-sdk": "2.0.8"
     }
-
 }
