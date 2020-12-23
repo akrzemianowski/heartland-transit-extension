@@ -124,7 +124,6 @@ if (!String.prototype.trim) {
           '#secure-payment-field': {
             height: '40px',
             border: '1px solid silver',
-            'letter-spacing': '2.5px',
             width: '97.5%',
             'padding-left': '9px',
           },
@@ -138,28 +137,28 @@ if (!String.prototype.trim) {
           },
           '#secure-payment-field[name="cardNumber"]': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-inputcard-blank@2x.png) no-repeat right',
             'background-size': '50px 30px',
           },
           '#secure-payment-field[name="cardNumber"].valid.card-type-visa': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-saved-visa@2x.png) no-repeat top right',
             'background-size': '75px 84px',
           },
           '#secure-payment-field[name="cardNumber"].invalid.card-type-visa': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-saved-visa@2x.png) no-repeat bottom right',
             'background-size': '75px 84px',
           },
           '#secure-payment-field[name="cardNumber"].invalid.card-type-discover': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-saved-discover@2x.png) no-repeat right',
             'background-size': '70px 74px',
@@ -167,7 +166,7 @@ if (!String.prototype.trim) {
           },
           '#secure-payment-field[name="cardNumber"].valid.card-type-discover': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-saved-discover@2x.png) no-repeat right',
             'background-size': '70px 74px',
@@ -175,21 +174,21 @@ if (!String.prototype.trim) {
           },
           '#secure-payment-field[name="cardNumber"].invalid.card-type-amex': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-input-amex@2x.png) no-repeat center right',
             'background-size': '50px 55px',
           },
           '#secure-payment-field[name="cardNumber"].valid.card-type-amex': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-inputcard-amex@2x.png) no-repeat center right',
             'background-size': '50px 55px',
           },
           '#secure-payment-field[name="cardNumber"].invalid.card-type-jcb': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-saved-jcb@2x.png) no-repeat right',
             'background-size': '75px 75px',
@@ -197,7 +196,7 @@ if (!String.prototype.trim) {
           },
           '#secure-payment-field[name="cardNumber"].valid.card-type-jcb': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-saved-jcb@2x.png) no-repeat right',
             'background-size': '75px 76px',
@@ -205,7 +204,7 @@ if (!String.prototype.trim) {
           },
           '#secure-payment-field[name="cardNumber"].invalid.card-type-mastercard': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-saved-mastercard@2x.png) no-repeat bottom right',
             'background-size': '71px',
@@ -213,7 +212,7 @@ if (!String.prototype.trim) {
           },
           '#secure-payment-field[name="cardNumber"].valid.card-type-mastercard': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/ss-saved-mastercard@2x.png) no-repeat top right',
             'background-size': '71px',
@@ -221,7 +220,7 @@ if (!String.prototype.trim) {
           },
           '#secure-payment-field.card-cvv': {
             background:
-              'transparent url(' +
+              'white url(' +
               THIS.options.baseUrl.replace('/index.php', '') +
               'skin/frontend/base/default/transit/images/cvv1.png) no-repeat right',
             'background-size': '50px 30px',
@@ -280,8 +279,8 @@ if (!String.prototype.trim) {
           return;
         }
 
-        if (response.error.message) {
-          alert(response.error.message);
+        if (response.reasons && response.reasons.length > 0) {
+          alert(response.reasons[0].message);
         } else {
           alert('Unexpected error.');
         }
@@ -534,8 +533,8 @@ function transitMultishipping(multiForm) {
       }
 
       if (response && response.error) {
-        if (response.error.message) {
-          alert(response.error.message);
+        if (response.reasons && response.reasons.length > 0) {
+          alert(response.reasons[0].message);
         }
       } else if (response && response.token_value) {
         tokenField.value = response.token_value;
@@ -653,8 +652,8 @@ Event.observe(document, 'aw_osc:onestepcheckout_form_init_before', function(e) {
     }
 
     if (response && response.error) {
-      if (response.error.message) {
-        alert(response.error.message);
+      if (response.reasons && response.reasons.length > 0) {
+        alert(response.reasons[0].message);
       }
       this.enablePlaceOrderButton();
       this.hidePleaseWaitNotice();
@@ -708,6 +707,7 @@ document.observe('dom:loaded', function() {
                 $('hps_transit_cc_exp_year').value =
                   data.token.cc_exp_year;
               }
+              $('hps_transit_use_stored_card').value = "1";
               this.transitResponseHandler.call(this, {
                 card_type: storedcardType,
                 token_value: data.token.token_value,
@@ -780,8 +780,8 @@ document.observe('dom:loaded', function() {
         }
 
         if (response && response.error) {
-          if (response.error.message) {
-            alert(response.error.message);
+          if (response.reasons && response.reasons.length > 0) {
+            alert(response.reasons[0].message);
           }
           checkout.setLoadWaiting(false);
         } else if (response && response.token_value) {
@@ -839,8 +839,8 @@ document.observe('dom:loaded', function() {
         }
 
         if (response && response.error) {
-          if (response.error.message) {
-            alert(response.error.message);
+          if (response.reasons && response.reasons.length > 0) {
+            alert(response.reasons[0].message);
           }
           checkout.setLoadWaiting(false);
         } else if (response && response.token_value) {
@@ -923,6 +923,7 @@ document.observe('dom:loaded', function() {
           var radio = $$(
             '[name="hps_transit_stored_card_select"]:checked'
           )[0];
+          $('hps_transit_use_stored_card').value = "1";
           var storedcardId = radio.value;
           var storedcardType = $(radio.id + '_card_type').value;
           new Ajax.Request(window.payment.transitGetTokenDataUrlOSC, {
@@ -979,8 +980,8 @@ document.observe('dom:loaded', function() {
       }
 
       if (response && response.error) {
-        if (response.error.message) {
-          alert(response.error.message);
+        if (response.reasons && response.reasons.length > 0) {
+          alert(response.reasons[0].message);
         }
       } else if (response && response.token_value) {
         tokenField.value = response.token_value;
@@ -1018,6 +1019,7 @@ document.observe('dom:loaded', function() {
           var radio = $$(
             '[name="hps_transit_stored_card_select"]:checked'
           )[0];
+          $('hps_transit_use_stored_card').value = "1";
           var storedcardId = radio.value;
           var storedcardType = $(radio.id + '_card_type').value;
           new Ajax.Request(window.payment.transitGetTokenDataUrlOSC, {
@@ -1088,8 +1090,8 @@ document.observe('dom:loaded', function() {
       }
 
       if (response && response.error) {
-        if (response.error.message) {
-          alert(response.error.message);
+        if (response.reasons && response.reasons.length > 0) {
+          alert(response.reasons[0].message);
         }
 
         $('onestepcheckout-place-order-loading').hide();
@@ -1170,7 +1172,7 @@ document.observe('dom:loaded', function() {
           IWD.OPC.Checkout.hideLoader();
           IWD.OPC.Checkout.xhr = null;
           IWD.OPC.Checkout.unlockPlaceOrder();
-          alert(response.error.message);
+          alert(response.reasons[0].message);
         } else if (response && response.token_value) {
           tokenField.value = response.token_value;
           lastFourField.value = response.card.number.substr(-4);
@@ -1285,6 +1287,7 @@ document.observe('dom:loaded', function() {
         var radio = $$(
           '[name="hps_transit_stored_card_select"]:checked'
         )[0];
+        $('hps_transit_use_stored_card').value = "1";
         var storedcardId = radio.value;
         var storedcardType = $(radio.id + '_card_type').value;
         new Ajax.Request(PaymentMethod.prototype.transitGetTokenDataUrl, {
@@ -1346,8 +1349,8 @@ document.observe('dom:loaded', function() {
       }
 
       if (response && response.error) {
-        if (response.error.message) {
-          alert(response.error.message);
+        if (response.reasons && response.reasons.length > 0) {
+          alert(response.reasons[0].message);
           $ji('.iwd_opc_loader_wrapper.active').hide();
         }
       } else if (response && response.token_value) {
