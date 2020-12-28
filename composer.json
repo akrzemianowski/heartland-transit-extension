@@ -3,7 +3,6 @@
     "type": "magento-module",
     "license": "Custom",
     "description": "Take credit card payments and store cards in a PCI friendly way.",
-    "version": "1.0",
     "authors": [
         {
             "name": "Heartland Payment Systems",
@@ -14,7 +13,7 @@
         "openmage-module"
     ],
     "require": {
-        "globalpayments/php-sdk": "2.0.8"
+        "globalpayments/php-sdk": "^2.0"
     },
     "extra": {
         "map": [
