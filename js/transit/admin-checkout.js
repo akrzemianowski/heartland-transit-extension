@@ -212,7 +212,7 @@
 
     Object.extend(AdminOrder.prototype, {
       submit: function() {
-        if (this.paymentMethod != window.TransITMagentoAdmin.options.code) {
+        if (!window.TransITMagentoAdmin.options || this.paymentMethod != window.TransITMagentoAdmin.options.code) {
           this._secureSubmitOldSubmit();
           return;
         }
