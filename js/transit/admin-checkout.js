@@ -205,6 +205,10 @@
     document.body.appendChild(script);
   };
   window.TransITMagentoAdmin.observeOrderSubmit = function () {
+    if (!window.TransITMagentoAdmin.options) {
+      return;
+    }
+
     if (typeof AdminOrder.prototype._secureSubmitOldSubmit === 'undefined') {
       var oldAdminOrder = Object.clone(AdminOrder.prototype);
       AdminOrder.prototype._secureSubmitOldSubmit = oldAdminOrder.submit;
@@ -212,7 +216,7 @@
 
     Object.extend(AdminOrder.prototype, {
       submit: function() {
-        if (!window.TransITMagentoAdmin.options || this.paymentMethod != window.TransITMagentoAdmin.options.code) {
+        if (this.paymentMethod != window.TransITMagentoAdmin.options.code) {
           this._secureSubmitOldSubmit();
           return;
         }
