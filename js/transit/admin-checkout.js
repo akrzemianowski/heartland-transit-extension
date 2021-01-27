@@ -146,7 +146,7 @@
       }
     });
 
-    window.TransITMagentoAdmin.cardForm.on('token-success', window.order.secureSubmitSuccessHandler.bind(window.order));
+    window.TransITMagentoAdmin.cardForm.on('token-success', window.order.transitSuccessHandler.bind(window.order));
 
     var onError = function(response) {
       if (response.error.message) {
@@ -205,10 +205,6 @@
     document.body.appendChild(script);
   };
   window.TransITMagentoAdmin.observeOrderSubmit = function () {
-    if (!window.TransITMagentoAdmin.options) {
-      return;
-    }
-
     if (typeof AdminOrder.prototype._secureSubmitOldSubmit === 'undefined') {
       var oldAdminOrder = Object.clone(AdminOrder.prototype);
       AdminOrder.prototype._secureSubmitOldSubmit = oldAdminOrder.submit;
@@ -216,13 +212,13 @@
 
     Object.extend(AdminOrder.prototype, {
       submit: function() {
-        if (this.paymentMethod != window.TransITMagentoAdmin.options.code) {
+        if (!window.TransITMagentoAdmin.options && this.paymentMethod != window.TransITMagentoAdmin.options.code) {
           this._secureSubmitOldSubmit();
           return;
         }
 
         // Use stored card checked, get existing token data
-        if (this.secureSubmitUseStoredCard()) {
+        if (this.transitUseStoredCard()) {
           // Set credit card information
           var creditCardId = $(window.TransITMagentoAdmin.options.code + '_stored_card_select').value;
           if (order.customerStoredCards[creditCardId]) {
@@ -231,7 +227,7 @@
             $(window.TransITMagentoAdmin.options.code + '_expiration_yr').value = creditCardData.cc_exp_year;
             $(window.TransITMagentoAdmin.options.code + '_token').value = creditCardData.token_value;
             $(window.TransITMagentoAdmin.options.code + '_cc_last_four').value = creditCardData.cc_last_four;
-            this.secureSubmitSuccessHandler({
+            this.transitSuccessHandler({
               paymentResponse:  creditCardData.token_value,
               details: {
                 lastFour: creditCardData.cc_last_four
@@ -244,11 +240,11 @@
             window.TransITMagentoAdmin.triggerSubmit();
         }
       },
-      secureSubmitUseStoredCard: function () {
+      transitUseStoredCard: function () {
         var storedCheckbox = $(window.TransITMagentoAdmin.options.code + '_stored_card_checkbox');
         return storedCheckbox && storedCheckbox.checked;
       },
-      secureSubmitSuccessHandler: function (resp) {
+      transitSuccessHandler: function (resp) {
         $(window.TransITMagentoAdmin.options.code + '_token').value = resp.paymentReference;
 
         // TODO: throw error when exp date /cvv isn't available
@@ -279,7 +275,7 @@
               that.itemsUpdate();
             }
           } else {
-            if (that.secureSubmitUseStoredCard()) {
+            if (that.transitUseStoredCard()) {
               if (editForm._submit()) {
                 disableElements('save');
               }
